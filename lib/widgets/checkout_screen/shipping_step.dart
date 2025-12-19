@@ -1,4 +1,5 @@
 import 'package:bloc_ecomm/theme/app_text_styles.dart';
+import 'package:bloc_ecomm/widgets/checkout_screen/shipping_text_field.dart';
 import 'package:flutter/material.dart';
 
 class ShippingStep extends StatelessWidget {
@@ -26,27 +27,27 @@ class ShippingStep extends StatelessWidget {
           children: [
             Text('Shipping Address', style: AppTextStyles.headingRegular),
             const SizedBox(height: 24),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Full Name'),
+            ShippingTextField(
+              label: 'Full Name',
               validator: (v) =>
                   v == null || v.isEmpty ? 'Enter your name' : null,
               onChanged: onNameChanged,
             ),
             const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Address'),
+            ShippingTextField(
+              label: 'Address',
               validator: (v) => v == null || v.isEmpty ? 'Enter address' : null,
               onChanged: onAddressChanged,
             ),
             const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'City'),
+            ShippingTextField(
+              label: 'City',
               validator: (v) => v == null || v.isEmpty ? 'Enter city' : null,
               onChanged: onCityChanged,
             ),
             const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'ZIP Code'),
+            ShippingTextField(
+              label: 'ZIP Code',
               validator: (v) =>
                   v == null || v.isEmpty ? 'Enter ZIP code' : null,
               onChanged: onZipChanged,

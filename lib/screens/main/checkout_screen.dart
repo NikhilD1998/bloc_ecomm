@@ -11,7 +11,6 @@ import '../../blocs/cart/cart_event.dart';
 import '../../blocs/cart/cart_state.dart';
 import '../../models/order_model.dart';
 import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
 import '../../widgets/common/primary_button.dart';
 
 class CheckoutScreen extends StatefulWidget {
