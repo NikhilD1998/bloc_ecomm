@@ -21,8 +21,6 @@ class _AuthScreenState extends State<AuthScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  String? _loadingAction;
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -32,7 +30,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _onLogin() {
     if (_formKey.currentState?.validate() ?? false) {
-      setState(() => _loadingAction = "login");
       context.read<AuthBloc>().add(
         LoginRequested(_emailController.text, _passwordController.text),
       );
@@ -40,12 +37,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _onGuest() {
-    setState(() => _loadingAction = "guest");
     context.read<AuthBloc>().add(GuestLoginRequested());
-  }
-
-  void _resetLoading() {
-    setState(() => _loadingAction = null);
   }
 
   @override
@@ -58,12 +50,10 @@ class _AuthScreenState extends State<AuthScreen> {
           child: BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is Authenticated) {
-                _resetLoading();
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) => const BottomNavBar()),
                 );
               } else if (state is Unauthenticated && state.error != null) {
-                _resetLoading();
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.error!)));
