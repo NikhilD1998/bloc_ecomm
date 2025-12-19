@@ -128,87 +128,92 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             backgroundColor: AppColors.screenBackground,
             elevation: 0,
           ),
-          body: Column(
-            children: [
-              // Progress indicator
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(3, (i) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 6),
-                      width: 32,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: i <= _currentStep
-                            ? AppColors.activatedButtonContainer
-                            : AppColors.fieldsUnselectedStroke,
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    // Step 1: Review Cart
-                    ReviewCartStep(
-                      items: state.items,
-                      subtotal: state.subtotal,
-                      tax: state.tax,
-                      total: state.total,
+          body: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Column(
+                children: [
+                  // Progress indicator
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(3, (i) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 6),
+                          width: 32,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: i <= _currentStep
+                                ? AppColors.activatedButtonContainer
+                                : AppColors.fieldsUnselectedStroke,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        );
+                      }),
                     ),
-                    // Step 2: Shipping Address
-                    ShippingStep(
-                      formKey: _formKey,
-                      onNameChanged: (v) => _name = v,
-                      onAddressChanged: (v) => _address = v,
-                      onCityChanged: (v) => _city = v,
-                      onZipChanged: (v) => _zip = v,
-                    ),
-                    // Step 3: Order Summary & Confirm
-                    OrderSummaryStep(
-                      name: _name,
-                      address: _address,
-                      city: _city,
-                      zip: _zip,
-                      items: state.items,
-                      total: state.total,
-                      orderId: _generateOrderId(),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    if (_currentStep > 0)
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: _prevStep,
-                          child: const Text('Back'),
+                  ),
+                  Expanded(
+                    child: PageView(
+                      controller: _pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        // Step 1: Review Cart
+                        ReviewCartStep(
+                          items: state.items,
+                          subtotal: state.subtotal,
+                          tax: state.tax,
+                          total: state.total,
                         ),
-                      ),
-                    if (_currentStep > 0) const SizedBox(width: 12),
-                    Expanded(
-                      child: PrimaryButton(
-                        label: _currentStep == 1
-                            ? 'Place Order'
-                            : _currentStep == 2
-                            ? 'Done'
-                            : 'Next',
-                        onPressed: () => _onNextPressed(state),
-                      ),
+                        // Step 2: Shipping Address
+                        ShippingStep(
+                          formKey: _formKey,
+                          onNameChanged: (v) => _name = v,
+                          onAddressChanged: (v) => _address = v,
+                          onCityChanged: (v) => _city = v,
+                          onZipChanged: (v) => _zip = v,
+                        ),
+                        // Step 3: Order Summary & Confirm
+                        OrderSummaryStep(
+                          name: _name,
+                          address: _address,
+                          city: _city,
+                          zip: _zip,
+                          items: state.items,
+                          total: state.total,
+                          orderId: _generateOrderId(),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        if (_currentStep > 0)
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: _prevStep,
+                              child: const Text('Back'),
+                            ),
+                          ),
+                        if (_currentStep > 0) const SizedBox(width: 12),
+                        Expanded(
+                          child: PrimaryButton(
+                            label: _currentStep == 1
+                                ? 'Place Order'
+                                : _currentStep == 2
+                                ? 'Done'
+                                : 'Next',
+                            onPressed: () => _onNextPressed(state),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },

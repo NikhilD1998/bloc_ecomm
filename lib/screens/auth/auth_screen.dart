@@ -56,101 +56,111 @@ class _AuthScreenState extends State<AuthScreen> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-          child: BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {
-              if (state is Authenticated) {
-                _resetLoading();
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const BottomNavBar()),
-                  (route) => false,
-                );
-              } else if (state is Unauthenticated && state.error != null) {
-                _resetLoading();
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.error!)));
-              }
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 24),
-                Text('Welcome Back', style: AppTextStyles.mainHeading),
-                const SizedBox(height: 8),
-                Text('Sign in to continue', style: AppTextStyles.bodyText14),
-                const SizedBox(height: 32),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _emailController,
-                        style: AppTextStyles.bodyText14,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.email_outlined),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        autofillHints: const [AutofillHints.email],
-                        validator: (value) => value == null || value.isEmpty
-                            ? 'Enter email'
-                            : null,
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _passwordController,
-                        style: AppTextStyles.bodyText14,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is Authenticated) {
+                    _resetLoading();
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const BottomNavBar()),
+                      (route) => false,
+                    );
+                  } else if (state is Unauthenticated && state.error != null) {
+                    _resetLoading();
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.error!)));
+                  }
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 24),
+                    Text('Welcome Back', style: AppTextStyles.mainHeading),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Sign in to continue',
+                      style: AppTextStyles.bodyText14,
+                    ),
+                    const SizedBox(height: 32),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _emailController,
+                            style: AppTextStyles.bodyText14,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              prefixIcon: Icon(Icons.email_outlined),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
+                            keyboardType: TextInputType.emailAddress,
+                            autofillHints: const [AutofillHints.email],
+                            validator: (value) => value == null || value.isEmpty
+                                ? 'Enter email'
+                                : null,
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: _passwordController,
+                            style: AppTextStyles.bodyText14,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: const Icon(Icons.lock_outline),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscurePassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
+                              ),
+                            ),
+                            obscureText: _obscurePassword,
+                            validator: (value) => value == null || value.isEmpty
+                                ? 'Enter password'
+                                : null,
+                          ),
+                          const SizedBox(height: 24),
+                          BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              final loading =
+                                  state is AuthLoading &&
+                                  _loadingAction == "login";
+                              return PrimaryButton(
+                                label: 'Login',
+                                onPressed: _onLogin,
+                                loading: loading,
+                                enabled: !loading,
+                              );
                             },
                           ),
-                        ),
-                        obscureText: _obscurePassword,
-                        validator: (value) => value == null || value.isEmpty
-                            ? 'Enter password'
-                            : null,
+                          const SizedBox(height: 12),
+                          BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              final loading =
+                                  state is AuthLoading &&
+                                  _loadingAction == "guest";
+                              return OutlinedButtonCustom(
+                                label: 'Continue as Guest',
+                                onPressed: _onGuest,
+                                loading: loading,
+                                enabled: !loading,
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 24),
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          final loading =
-                              state is AuthLoading && _loadingAction == "login";
-                          return PrimaryButton(
-                            label: 'Login',
-                            onPressed: _onLogin,
-                            loading: loading,
-                            enabled: !loading,
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          final loading =
-                              state is AuthLoading && _loadingAction == "guest";
-                          return OutlinedButtonCustom(
-                            label: 'Continue as Guest',
-                            onPressed: _onGuest,
-                            loading: loading,
-                            enabled: !loading,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

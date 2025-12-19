@@ -39,154 +39,164 @@ class ProfileScreen extends StatelessWidget {
         body: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is Authenticated) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 32),
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundColor: AppColors.activatedButtonContainer,
-                      child: Icon(Icons.person, size: 48, color: Colors.white),
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      state.isGuest ? 'Guest User' : 'user@example.com',
-                      style: AppTextStyles.mainHeading,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      state.isGuest
-                          ? 'You are browsing as a guest.'
-                          : 'Welcome back!',
-                      style: AppTextStyles.bodyText14,
-                    ),
-                    if (!state.isGuest) ...[
-                      const SizedBox(height: 24),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Your Orders',
-                          style: AppTextStyles.headingMedium,
+              return Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24.0),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 32),
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundColor: AppColors.activatedButtonContainer,
+                          child: Icon(
+                            Icons.person,
+                            size: 48,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      FutureBuilder<List<OrderModel>>(
-                        future: _getOrders(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          final orders = snapshot.data ?? [];
-                          if (orders.isEmpty) {
-                            return Text(
-                              'No orders yet.',
-                              style: AppTextStyles.bodyText14,
-                            );
-                          }
-                          return Column(
-                            children: List.generate(orders.length, (index) {
-                              final order = orders[index];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 16),
-                                child: Card(
-                                  elevation: 3,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  color: AppColors.fieldsBackground,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Order ID: ${order.id}',
-                                          style: AppTextStyles.bodyText14
-                                              .copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColors
-                                                    .activatedButtonContainer,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          'Date: ${order.date.toLocal().toString().split(' ')[0]}',
-                                          style: AppTextStyles.bodyText12
-                                              .copyWith(
-                                                color: AppColors
-                                                    .unselectedFieldsFont,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          'Total: \$${order.total.toStringAsFixed(2)}',
-                                          style: AppTextStyles.headingMedium
-                                              .copyWith(
-                                                color: AppColors.mainHeading,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          'Items:',
-                                          style: AppTextStyles.bodyText14
-                                              .copyWith(
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        ...order.items.map(
-                                          (item) => Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 8,
-                                              bottom: 2,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  '${item.quantity}x ',
-                                                  style:
-                                                      AppTextStyles.bodyText12,
-                                                ),
-                                                Expanded(
-                                                  child: Text(
-                                                    item.title,
-                                                    style: AppTextStyles
-                                                        .bodyText12,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                        const SizedBox(height: 24),
+                        Text(
+                          state.isGuest ? 'Guest User' : 'user@example.com',
+                          style: AppTextStyles.mainHeading,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          state.isGuest
+                              ? 'You are browsing as a guest.'
+                              : 'Welcome back!',
+                          style: AppTextStyles.bodyText14,
+                        ),
+                        if (!state.isGuest) ...[
+                          const SizedBox(height: 24),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Your Orders',
+                              style: AppTextStyles.headingMedium,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          FutureBuilder<List<OrderModel>>(
+                            future: _getOrders(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              final orders = snapshot.data ?? [];
+                              if (orders.isEmpty) {
+                                return Text(
+                                  'No orders yet.',
+                                  style: AppTextStyles.bodyText14,
+                                );
+                              }
+                              return Column(
+                                children: List.generate(orders.length, (index) {
+                                  final order = orders[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: Card(
+                                      elevation: 3,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                      color: AppColors.fieldsBackground,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Order ID: ${order.id}',
+                                              style: AppTextStyles.bodyText14
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppColors
+                                                        .activatedButtonContainer,
                                                   ),
-                                                ),
-                                                Text(
-                                                  '\$${(item.price * item.quantity).toStringAsFixed(2)}',
-                                                  style:
-                                                      AppTextStyles.bodyText12,
-                                                ),
-                                              ],
                                             ),
-                                          ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              'Date: ${order.date.toLocal().toString().split(' ')[0]}',
+                                              style: AppTextStyles.bodyText12
+                                                  .copyWith(
+                                                    color: AppColors
+                                                        .unselectedFieldsFont,
+                                                  ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              'Total: \$${order.total.toStringAsFixed(2)}',
+                                              style: AppTextStyles.headingMedium
+                                                  .copyWith(
+                                                    color:
+                                                        AppColors.mainHeading,
+                                                  ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              'Items:',
+                                              style: AppTextStyles.bodyText14
+                                                  .copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            ...order.items.map(
+                                              (item) => Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 8,
+                                                  bottom: 2,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      '${item.quantity}x ',
+                                                      style: AppTextStyles
+                                                          .bodyText12,
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        item.title,
+                                                        style: AppTextStyles
+                                                            .bodyText12,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '\$${(item.price * item.quantity).toStringAsFixed(2)}',
+                                                      style: AppTextStyles
+                                                          .bodyText12,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
+                                  );
+                                }),
                               );
-                            }),
-                          );
-                        },
-                      ),
-                    ],
-                    const SizedBox(height: 32),
-                    PrimaryButton(
-                      label: 'Logout',
-                      onPressed: () => _logout(context),
+                            },
+                          ),
+                        ],
+                        const SizedBox(height: 32),
+                        PrimaryButton(
+                          label: 'Logout',
+                          onPressed: () => _logout(context),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               );
             } else {
