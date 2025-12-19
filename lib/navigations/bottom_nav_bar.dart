@@ -1,4 +1,4 @@
-import 'package:bloc_ecomm/screens/main/products.dart';
+import 'package:bloc_ecomm/screens/main/products_screen.dart';
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
