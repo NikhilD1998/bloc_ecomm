@@ -7,10 +7,14 @@ import 'blocs/product/product_bloc.dart';
 import 'theme/app_colors.dart';
 import 'theme/app_text_styles.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'blocs/cart/cart_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  Hive.registerAdapter(
+    CartItemAdapter(),
+  ); // This must match the generated adapter name
   runApp(const MyApp());
 }
 

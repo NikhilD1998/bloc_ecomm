@@ -23,9 +23,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Future<void> _onAddItem(AddItem event, Emitter<CartState> emit) async {
+    print(
+      'CartBloc: AddItem event received for productId=${event.productId}, quantity=${event.quantity}',
+    );
     final box = await Hive.openBox(_cartBoxName);
     List<CartItem> items = (box.get('items', defaultValue: []) as List<dynamic>)
         .cast<CartItem>();
+    print('CartBloc: Current items before add: $items');
     final product = dummyProducts.firstWhere((p) => p['id'] == event.productId);
     final existing = items.where((i) => i.id == event.productId).toList();
     if (existing.isNotEmpty) {
@@ -36,6 +40,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
                 : i,
           )
           .toList();
+      print('CartBloc: Updated quantity for existing item.');
     } else {
       items.add(
         CartItem(
@@ -46,12 +51,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           quantity: event.quantity,
         ),
       );
+      print('CartBloc: Added new item to cart.');
     }
     await box.put('items', items);
+    print('CartBloc: Items after add: $items');
     emit(_calculateState(items));
   }
 
   Future<void> _onRemoveItem(RemoveItem event, Emitter<CartState> emit) async {
+    print('CartBloc: RemoveItem event for productId=${event.productId}');
     final box = await Hive.openBox(_cartBoxName);
     List<CartItem> items = (box.get('items', defaultValue: []) as List<dynamic>)
         .cast<CartItem>();
@@ -64,6 +72,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     UpdateQuantity event,
     Emitter<CartState> emit,
   ) async {
+    print(
+      'CartBloc: UpdateQuantity event for productId=${event.productId}, quantity=${event.quantity}',
+    );
     final box = await Hive.openBox(_cartBoxName);
     List<CartItem> items = (box.get('items', defaultValue: []) as List<dynamic>)
         .cast<CartItem>();
@@ -79,6 +90,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Future<void> _onClearCart(ClearCart event, Emitter<CartState> emit) async {
+    print('CartBloc: ClearCart event');
     final box = await Hive.openBox(_cartBoxName);
     await box.put('items', []);
     emit(_calculateState([]));

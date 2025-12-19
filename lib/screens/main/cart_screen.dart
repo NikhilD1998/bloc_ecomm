@@ -26,6 +26,7 @@ class CartScreen extends StatelessWidget {
             if (state is CartLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is CartLoaded) {
+              print('CartScreen: CartLoaded with items: ${state.items}');
               final items = state.items;
               if (items.isEmpty) {
                 return Center(

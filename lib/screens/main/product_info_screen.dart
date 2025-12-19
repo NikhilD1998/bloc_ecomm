@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../helpers/dummy_data.dart';
 import '../../models/product_model.dart';
 import '../../theme/app_text_styles.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/common/primary_button.dart';
+import '../../blocs/cart/cart_bloc.dart';
+import '../../blocs/cart/cart_event.dart';
 
 class ProductInfoScreen extends StatefulWidget {
   final String productId;
@@ -128,7 +131,19 @@ class _ProductInfoScreenState extends State<ProductInfoScreen> {
               label: 'Add to Cart',
               onPressed: product.inStock
                   ? () {
-                      // TODO: Add to cart via CartBloc with _quantity
+                      print(
+                        'ProductInfoScreen: Add to Cart pressed for productId=${product.id}, quantity=$_quantity',
+                      );
+                      context.read<CartBloc>().add(
+                        AddItem(product.id, quantity: _quantity),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Added to cart'),
+                          backgroundColor: AppColors.snackBarContainer,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
                     }
                   : () {},
               enabled: product.inStock,
