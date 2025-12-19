@@ -1,8 +1,14 @@
 import 'package:bloc_ecomm/widgets/common/app_button.dart';
+import 'package:bloc_ecomm/widgets/common/outlined_button_custom.dart';
+import 'package:bloc_ecomm/widgets/common/primary_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../theme/app_text_styles.dart';
 import '../../theme/app_colors.dart';
 import '../../navigations/bottom_nav_bar.dart';
+import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/auth/auth_event.dart';
+import '../../blocs/auth/auth_state.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -16,6 +22,8 @@ class _AuthScreenState extends State<AuthScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  String? _loadingAction; // "login" or "guest" or null
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -24,13 +32,21 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _onLogin() {
-    // TODO: Dispatch AuthBloc login event
+    if (_formKey.currentState?.validate() ?? false) {
+      setState(() => _loadingAction = "login");
+      context.read<AuthBloc>().add(
+        LoginRequested(_emailController.text, _passwordController.text),
+      );
+    }
   }
 
   void _onGuest() {
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => const BottomNavBar()));
+    setState(() => _loadingAction = "guest");
+    context.read<AuthBloc>().add(GuestLoginRequested());
+  }
+
+  void _resetLoading() {
+    setState(() => _loadingAction = null);
   }
 
   @override
@@ -40,55 +56,87 @@ class _AuthScreenState extends State<AuthScreen> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 24),
-              Text('Welcome Back', style: AppTextStyles.mainHeading),
-              const SizedBox(height: 8),
-              Text('Sign in to continue', style: AppTextStyles.bodyText14),
-              const SizedBox(height: 32),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _emailController,
-                      style: AppTextStyles.bodyText14,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email_outlined),
+          child: BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is Authenticated) {
+                _resetLoading();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const BottomNavBar()),
+                );
+              } else if (state is Unauthenticated && state.error != null) {
+                _resetLoading();
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.error!)));
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 24),
+                Text('Welcome Back', style: AppTextStyles.mainHeading),
+                const SizedBox(height: 8),
+                Text('Sign in to continue', style: AppTextStyles.bodyText14),
+                const SizedBox(height: 32),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _emailController,
+                        style: AppTextStyles.bodyText14,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: Icon(Icons.email_outlined),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Enter email'
+                            : null,
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      autofillHints: const [AutofillHints.email],
-                      validator: (value) =>
-                          value == null || value.isEmpty ? 'Enter email' : null,
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _passwordController,
-                      style: AppTextStyles.bodyText14,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock_outline),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _passwordController,
+                        style: AppTextStyles.bodyText14,
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                          prefixIcon: Icon(Icons.lock_outline),
+                        ),
+                        obscureText: true,
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Enter password'
+                            : null,
                       ),
-                      obscureText: true,
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'Enter password'
-                          : null,
-                    ),
-                    const SizedBox(height: 24),
-                    AppButton(label: 'Login', onPressed: _onLogin),
-                    const SizedBox(height: 12),
-                    AppButton(
-                      label: 'Continue as Guest',
-                      onPressed: _onGuest,
-                      outlined: true,
-                    ),
-                  ],
+                      const SizedBox(height: 24),
+                      BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          final loading = state is AuthLoading;
+                          return PrimaryButton(
+                            label: 'Login',
+                            onPressed: _onLogin,
+                            loading: loading,
+                            enabled: !loading,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          final loading = state is AuthLoading;
+                          return OutlinedButtonCustom(
+                            label: 'Continue as Guest',
+                            onPressed: _onGuest,
+                            loading: loading,
+                            enabled: !loading,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
