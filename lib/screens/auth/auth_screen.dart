@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_text_styles.dart';
 import '../../theme/app_colors.dart';
+import '../../navigations/bottom_nav_bar.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -26,7 +27,9 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _onGuest() {
-    // TODO: Dispatch AuthBloc guest mode event
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const BottomNavBar()));
   }
 
   @override
