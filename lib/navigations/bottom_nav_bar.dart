@@ -1,3 +1,4 @@
+import 'package:bloc_ecomm/screens/main/cart_screen.dart';
 import 'package:bloc_ecomm/screens/main/products_screen.dart';
 import 'package:bloc_ecomm/screens/main/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class _BottomNavBarState extends State<BottomNavBar>
       case 0:
         return const ProductsScreen();
       case 1:
-        return const Center(child: Text('Cart'));
+        return const CartScreen();
       case 2:
         return const ProfileScreen();
       default:

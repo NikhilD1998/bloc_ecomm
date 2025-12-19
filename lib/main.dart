@@ -1,4 +1,5 @@
 import 'package:bloc_ecomm/blocs/auth/auth_bloc.dart';
+import 'package:bloc_ecomm/blocs/cart/cart_bloc.dart';
 import 'package:bloc_ecomm/screens/others/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthBloc>(create: (_) => AuthBloc()),
         BlocProvider<ProductBloc>(create: (_) => ProductBloc()),
-        //BlocProvider<CartBloc>(create: (_) => CartBloc()),
+        BlocProvider<CartBloc>(create: (_) => CartBloc()),
       ],
       child: MaterialApp(
         title: 'Vegan Market',
