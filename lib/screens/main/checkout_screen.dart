@@ -30,6 +30,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   String _address = '';
   String _city = '';
   String _zip = '';
+  String? _orderId;
 
   String _generateOrderId() {
     final rand = Random();
@@ -64,8 +65,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Future<void> _saveOrderToHive(CartLoaded state) async {
     final orderBox = await Hive.openBox<OrderModel>('orders');
+    final orderId = _generateOrderId();
     final order = OrderModel(
-      id: _generateOrderId(),
+      id: orderId,
       name: _name,
       address: _address,
       city: _city,
@@ -85,10 +87,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       date: DateTime.now(),
     );
     await orderBox.add(order);
+    setState(() {
+      _orderId = orderId;
+    });
   }
 
   void _onNextPressed(CartLoaded state) async {
-    if (_currentStep == 1) {
+    if (_currentStep == 2) {
       // Place Order
       await _saveOrderToHive(state);
       context.read<CartBloc>().add(ClearCart());
@@ -100,7 +105,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           curve: Curves.ease,
         );
       });
-    } else if (_currentStep == 2) {
+    } else if (_currentStep == 3) {
       // Done: Navigate to bottom nav bar (pop to root or use a named route)
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).popUntil((route) => route.isFirst);
@@ -133,12 +138,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               constraints: const BoxConstraints(maxWidth: 420),
               child: Column(
                 children: [
-                  // Progress indicator
+                  // Progress indicator (4 steps)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(3, (i) {
+                      children: List.generate(4, (i) {
                         return Container(
                           margin: const EdgeInsets.symmetric(horizontal: 6),
                           width: 32,
@@ -181,7 +186,37 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           zip: _zip,
                           items: state.items,
                           total: state.total,
-                          orderId: _generateOrderId(),
+                          orderId: _orderId ?? _generateOrderId(),
+                        ),
+                        // Step 4: Order Placed Confirmation
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.check_circle,
+                              color: AppColors.activatedButtonContainer,
+                              size: 80,
+                            ),
+                            const SizedBox(height: 24),
+                            Text(
+                              'Order Placed!',
+                              style: AppTextStyles.mainHeading,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'Your order has been placed successfully.',
+                              style: AppTextStyles.bodyText14,
+                            ),
+                            const SizedBox(height: 24),
+                            Text('Order ID:', style: AppTextStyles.bodyText14),
+                            const SizedBox(height: 4),
+                            Text(
+                              _orderId ?? '',
+                              style: AppTextStyles.headingMedium.copyWith(
+                                color: AppColors.activatedButtonContainer,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -190,19 +225,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
-                        if (_currentStep > 0)
+                        if (_currentStep > 0 && _currentStep < 3)
                           Expanded(
                             child: OutlinedButton(
                               onPressed: _prevStep,
                               child: const Text('Back'),
                             ),
                           ),
-                        if (_currentStep > 0) const SizedBox(width: 12),
+                        if (_currentStep > 0 && _currentStep < 3)
+                          const SizedBox(width: 12),
                         Expanded(
                           child: PrimaryButton(
-                            label: _currentStep == 1
+                            label: _currentStep == 2
                                 ? 'Place Order'
-                                : _currentStep == 2
+                                : _currentStep == 3
                                 ? 'Done'
                                 : 'Next',
                             onPressed: () => _onNextPressed(state),

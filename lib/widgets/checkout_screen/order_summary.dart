@@ -1,11 +1,11 @@
-import 'package:bloc_ecomm/theme/app_colors.dart';
 import 'package:bloc_ecomm/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class OrderSummaryStep extends StatelessWidget {
-  final String name, address, city, zip, orderId;
+  final String name, address, city, zip;
   final List items;
   final double total;
+  final String orderId;
   const OrderSummaryStep({
     required this.name,
     required this.address,
@@ -24,37 +24,31 @@ class OrderSummaryStep extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.check_circle,
-              color: AppColors.activatedButtonContainer,
-              size: 64,
-            ),
-            const SizedBox(height: 24),
-            Text('Order Placed!', style: AppTextStyles.mainHeading),
-            const SizedBox(height: 12),
-            Text(
-              'Thank you for your purchase.',
-              style: AppTextStyles.bodyText14,
-            ),
-            const SizedBox(height: 24),
-            Text('Order ID:', style: AppTextStyles.bodyText14),
-            Text(
-              orderId,
-              style: AppTextStyles.headingMedium.copyWith(
-                color: AppColors.activatedButtonContainer,
-              ),
-            ),
-            const SizedBox(height: 32),
+            Text('Order Summary', style: AppTextStyles.mainHeading),
+            const SizedBox(height: 16),
             Text('Shipping to:', style: AppTextStyles.bodyText14),
             Text(
               '$name\n$address\n$city, $zip',
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyText14,
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
+            Text('Items:', style: AppTextStyles.bodyText14),
+            ...items.map(
+              (item) => Text(
+                '${item.quantity}x ${item.title} - \$${(item.price * item.quantity).toStringAsFixed(2)}',
+                style: AppTextStyles.bodyText12,
+              ),
+            ),
+            const SizedBox(height: 24),
             Text(
-              'Total Paid: \$${total.toStringAsFixed(2)}',
+              'Total: \$${total.toStringAsFixed(2)}',
               style: AppTextStyles.headingMedium,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Review your order and confirm to place it.',
+              style: AppTextStyles.bodyText14,
             ),
           ],
         ),
