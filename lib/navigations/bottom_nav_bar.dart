@@ -1,3 +1,4 @@
+import 'package:bloc_ecomm/screens/main/products.dart';
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
@@ -24,13 +25,13 @@ class _BottomNavBarState extends State<BottomNavBar>
   Widget _getBodyForIndex(int index) {
     switch (index) {
       case 0:
-        return const Center(child: Text('Home'));
+        return const ProductsScreen();
       case 1:
         return const Center(child: Text('Cart'));
       case 2:
         return const Center(child: Text('Profile'));
       default:
-        return const Center(child: Text('Home'));
+        return const ProductsScreen();
     }
   }
 

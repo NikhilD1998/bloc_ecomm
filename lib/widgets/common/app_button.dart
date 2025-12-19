@@ -1,3 +1,4 @@
+import 'package:bloc_ecomm/theme/app_colors.dart' show AppColors;
 import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
@@ -45,6 +46,10 @@ class AppButton extends StatelessWidget {
               child: buttonChild,
               style: OutlinedButton.styleFrom(
                 minimumSize: Size(double.infinity, buttonHeight),
+                side: const BorderSide(
+                  color: AppColors.activatedButtonContainer,
+                  width: 1.5,
+                ),
               ),
             )
           : ElevatedButton(
