@@ -22,6 +22,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String? _loadingAction;
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -98,11 +99,23 @@ class _AuthScreenState extends State<AuthScreen> {
                       TextFormField(
                         controller: _passwordController,
                         style: AppTextStyles.bodyText14,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Password',
-                          prefixIcon: Icon(Icons.lock_outline),
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                         ),
-                        obscureText: true,
+                        obscureText: _obscurePassword,
                         validator: (value) => value == null || value.isEmpty
                             ? 'Enter password'
                             : null,
