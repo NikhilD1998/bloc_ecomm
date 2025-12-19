@@ -60,8 +60,9 @@ class _AuthScreenState extends State<AuthScreen> {
             listener: (context, state) {
               if (state is Authenticated) {
                 _resetLoading();
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (_) => const BottomNavBar()),
+                  (route) => false,
                 );
               } else if (state is Unauthenticated && state.error != null) {
                 _resetLoading();
