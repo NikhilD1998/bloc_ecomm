@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Vegan Market',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.screenBackground,
@@ -63,19 +63,34 @@ class MyApp extends StatelessWidget {
             textStyle: AppTextStyles.buttonText,
             disabledBackgroundColor: AppColors.disabledButtonContainer,
             disabledForegroundColor: AppColors.disabledButtonText,
+            minimumSize: const Size(double.infinity, 48),
           ),
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.outlinedButtonText,
-            side: BorderSide(color: AppColors.outlinedButtonStroke),
+            side: BorderSide(color: AppColors.outlinedButtonStroke, width: 2),
             textStyle: AppTextStyles.buttonText,
+            minimumSize: const Size(double.infinity, 48),
           ),
         ),
         snackBarTheme: SnackBarThemeData(
           backgroundColor: AppColors.snackBarContainer,
           contentTextStyle: AppTextStyles.bodyText14,
+          behavior: SnackBarBehavior.floating,
+          elevation: 4,
         ),
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+          },
+        ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        useMaterial3: true,
       ),
       home: const SplashScreen(),
     );
