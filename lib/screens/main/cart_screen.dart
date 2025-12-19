@@ -1,5 +1,9 @@
+import 'package:bloc_ecomm/screens/main/checkout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/auth/auth_bloc.dart';
+import '../../blocs/auth/auth_state.dart';
+import '../auth/auth_screen.dart';
 import '../../blocs/cart/cart_bloc.dart';
 import '../../blocs/cart/cart_event.dart';
 import '../../blocs/cart/cart_state.dart';
@@ -165,7 +169,27 @@ class CartScreen extends StatelessWidget {
                         PrimaryButton(
                           label: 'Checkout',
                           onPressed: () {
-                            // TODO: Navigate to checkout flow
+                            final authState = context.read<AuthBloc>().state;
+                            if (authState is Unauthenticated) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const AuthScreen(),
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Please log in to continue to checkout.',
+                                  ),
+                                ),
+                              );
+                            } else {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const CheckoutScreen(),
+                                ),
+                              );
+                            }
                           },
                         ),
                         const SizedBox(height: 8),
