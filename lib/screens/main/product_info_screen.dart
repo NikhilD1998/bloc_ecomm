@@ -85,23 +85,40 @@ class _ProductInfoScreenState extends State<ProductInfoScreen> {
               children: [
                 Text('Quantity:', style: AppTextStyles.bodyText14),
                 const SizedBox(width: 12),
-                DropdownButton<int>(
-                  value: _quantity,
-                  items: List.generate(
-                    10,
-                    (i) =>
-                        DropdownMenuItem(value: i + 1, child: Text('${i + 1}')),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: AppColors.fieldsBackground,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: AppColors.fieldsSelectedStroke,
+                      width: 1.5,
+                    ),
                   ),
-                  onChanged: product.inStock
-                      ? (val) {
-                          if (val != null) setState(() => _quantity = val);
-                        }
-                      : null,
-                  style: AppTextStyles.bodyText14,
-                  dropdownColor: Colors.white,
-                  underline: Container(
-                    height: 2,
-                    color: AppColors.fieldsSelectedStroke,
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<int>(
+                      value: _quantity,
+                      items: List.generate(
+                        10,
+                        (i) => DropdownMenuItem(
+                          value: i + 1,
+                          child: Text(
+                            '${i + 1}',
+                            style: AppTextStyles.bodyText14,
+                          ),
+                        ),
+                      ),
+                      onChanged: product.inStock
+                          ? (val) {
+                              if (val != null) setState(() => _quantity = val);
+                            }
+                          : null,
+                      dropdownColor: AppColors.fieldsBackground,
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.activatedButtonContainer,
+                      ),
+                    ),
                   ),
                 ),
               ],
