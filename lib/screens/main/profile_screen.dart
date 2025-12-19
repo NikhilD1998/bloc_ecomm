@@ -7,7 +7,7 @@ import '../../blocs/auth/auth_event.dart';
 import '../../theme/app_text_styles.dart';
 import '../../theme/app_colors.dart';
 import '../auth/auth_screen.dart';
-import '../../widgets/common/primary_button.dart'; // <-- Import PrimaryButton
+import '../../widgets/common/primary_button.dart';
 import '../../models/order_model.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -88,7 +88,8 @@ class ProfileScreen extends StatelessWidget {
                                   child: CircularProgressIndicator(),
                                 );
                               }
-                              final orders = snapshot.data ?? [];
+                              final orders = (snapshot.data ?? []).reversed
+                                  .toList();
                               if (orders.isEmpty) {
                                 return Text(
                                   'No orders yet.',
