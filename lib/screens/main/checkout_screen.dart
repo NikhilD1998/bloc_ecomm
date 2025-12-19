@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:bloc_ecomm/widgets/checkout_screen/order_placed_confirmation.dart';
 import 'package:bloc_ecomm/widgets/checkout_screen/order_summary.dart';
 import 'package:bloc_ecomm/widgets/checkout_screen/review_cart.dart';
 import 'package:bloc_ecomm/widgets/checkout_screen/shipping_step.dart';
@@ -163,14 +164,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       controller: _pageController,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
-                        // Step 1: Review Cart
                         ReviewCartStep(
                           items: state.items,
                           subtotal: state.subtotal,
                           tax: state.tax,
                           total: state.total,
                         ),
-                        // Step 2: Shipping Address
                         ShippingStep(
                           formKey: _formKey,
                           onNameChanged: (v) => _name = v,
@@ -178,7 +177,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           onCityChanged: (v) => _city = v,
                           onZipChanged: (v) => _zip = v,
                         ),
-                        // Step 3: Order Summary & Confirm
                         OrderSummaryStep(
                           name: _name,
                           address: _address,
@@ -188,36 +186,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           total: state.total,
                           orderId: _orderId ?? _generateOrderId(),
                         ),
-                        // Step 4: Order Placed Confirmation
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.check_circle,
-                              color: AppColors.activatedButtonContainer,
-                              size: 80,
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              'Order Placed!',
-                              style: AppTextStyles.mainHeading,
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Your order has been placed successfully.',
-                              style: AppTextStyles.bodyText14,
-                            ),
-                            const SizedBox(height: 24),
-                            Text('Order ID:', style: AppTextStyles.bodyText14),
-                            const SizedBox(height: 4),
-                            Text(
-                              _orderId ?? '',
-                              style: AppTextStyles.headingMedium.copyWith(
-                                color: AppColors.activatedButtonContainer,
-                              ),
-                            ),
-                          ],
-                        ),
+                        OrderPlacedConfirmation(orderId: _orderId ?? 'N/A'),
                       ],
                     ),
                   ),
