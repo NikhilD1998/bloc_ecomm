@@ -137,27 +137,34 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       onRefresh: () async {
                         context.read<ProductBloc>().add(RefreshProducts());
                       },
-                      child: GridView.builder(
-                        padding: const EdgeInsets.all(16),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
-                              childAspectRatio: 0.7,
-                            ),
-                        itemCount: products.length,
-                        itemBuilder: (context, index) {
-                          final product = products[index];
-                          return ProductCard(
-                            product: product,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      ProductInfoScreen(productId: product.id),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isTablet = constraints.maxWidth >= 600;
+                          final crossAxisCount = isTablet ? 3 : 2;
+                          return GridView.builder(
+                            padding: const EdgeInsets.all(16),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: crossAxisCount,
+                                  mainAxisSpacing: 16,
+                                  crossAxisSpacing: 16,
+                                  childAspectRatio: 0.7,
                                 ),
+                            itemCount: products.length,
+                            itemBuilder: (context, index) {
+                              final product = products[index];
+                              return ProductCard(
+                                product: product,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ProductInfoScreen(
+                                        productId: product.id,
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           );
