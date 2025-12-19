@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
-  const ProductCard({required this.product});
+  final VoidCallback? onTap;
+
+  const ProductCard({required this.product, this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +15,8 @@ class ProductCard extends StatelessWidget {
       elevation: 2,
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          // TODO: Navigate to product details
-        },
+      child: GestureDetector(
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(

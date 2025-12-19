@@ -1,3 +1,4 @@
+import 'package:bloc_ecomm/screens/main/product_info_screen.dart';
 import 'package:bloc_ecomm/widgets/product_screen/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +38,18 @@ class ProductsScreen extends StatelessWidget {
                   itemCount: products.length,
                   itemBuilder: (context, index) {
                     final product = products[index];
-                    return ProductCard(product: product);
+                    return ProductCard(
+                      product: product,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                ProductInfoScreen(productId: product.id),
+                          ),
+                        );
+                      },
+                    );
                   },
                 ),
               );
