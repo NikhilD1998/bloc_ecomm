@@ -1,3 +1,4 @@
+import 'package:bloc_ecomm/widgets/common/app_button.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_text_styles.dart';
 import '../../theme/app_colors.dart';
@@ -77,20 +78,12 @@ class _AuthScreenState extends State<AuthScreen> {
                           : null,
                     ),
                     const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _onLogin,
-                        child: const Text('Login'),
-                      ),
-                    ),
+                    AppButton(label: 'Login', onPressed: _onLogin),
                     const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        onPressed: _onGuest,
-                        child: const Text('Continue as Guest'),
-                      ),
+                    AppButton(
+                      label: 'Continue as Guest',
+                      onPressed: _onGuest,
+                      outlined: true,
                     ),
                   ],
                 ),
