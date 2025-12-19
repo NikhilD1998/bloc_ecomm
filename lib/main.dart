@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'theme/app_colors.dart';
+import 'theme/app_text_styles.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,8 +13,68 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: AppColors.screenBackground,
+        colorScheme: ColorScheme(
+          brightness: Brightness.light,
+          primary: AppColors.activatedButtonContainer,
+          onPrimary: Colors.white,
+          secondary: AppColors.outlinedButtonText,
+          onSecondary: Colors.white,
+          error: Colors.red,
+          onError: Colors.white,
+          background: AppColors.screenBackground,
+          onBackground: AppColors.bodyTextFont,
+          surface: AppColors.fieldsBackground,
+          onSurface: AppColors.bodyTextFont,
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: AppColors.screenBackground,
+          foregroundColor: AppColors.mainHeading,
+          titleTextStyle: AppTextStyles.mainHeading,
+          elevation: 0,
+        ),
+        textTheme: TextTheme(
+          headlineLarge: AppTextStyles.mainHeading,
+          headlineMedium: AppTextStyles.headingRegular,
+          headlineSmall: AppTextStyles.headingMedium,
+          titleMedium: AppTextStyles.buttonText,
+          bodyLarge: AppTextStyles.bodyText14,
+          bodyMedium: AppTextStyles.bodyText14,
+          bodySmall: AppTextStyles.bodyText12,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: AppColors.fieldsBackground,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.fieldsUnselectedStroke),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.fieldsSelectedStroke),
+          ),
+          labelStyle: TextStyle(color: AppColors.unselectedFieldsFont),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.activatedButtonContainer,
+            foregroundColor: Colors.white,
+            textStyle: AppTextStyles.buttonText,
+            disabledBackgroundColor: AppColors.disabledButtonContainer,
+            disabledForegroundColor: AppColors.disabledButtonText,
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.outlinedButtonText,
+            side: BorderSide(color: AppColors.outlinedButtonStroke),
+            textStyle: AppTextStyles.buttonText,
+          ),
+        ),
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: AppColors.snackBarContainer,
+          contentTextStyle: AppTextStyles.bodyText14,
+        ),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -40,10 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
