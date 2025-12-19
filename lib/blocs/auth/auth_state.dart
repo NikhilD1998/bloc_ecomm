@@ -13,8 +13,9 @@ class AuthLoading extends AuthState {}
 class Authenticated extends AuthState {
   final bool isGuest;
   const Authenticated({this.isGuest = false});
+
   @override
-  List<Object?> get props => [isGuest];
+  String toString() => 'Authenticated(isGuest: $isGuest)';
 }
 
 class Unauthenticated extends AuthState {

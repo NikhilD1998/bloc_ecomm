@@ -170,7 +170,16 @@ class CartScreen extends StatelessWidget {
                           label: 'Checkout',
                           onPressed: () {
                             final authState = context.read<AuthBloc>().state;
-                            if (authState is Unauthenticated) {
+                            print(
+                              'DEBUG: authState runtimeType = ${authState.runtimeType}',
+                            );
+                            print('DEBUG: authState = $authState');
+                            if (authState is Unauthenticated ||
+                                (authState is Authenticated &&
+                                    authState.isGuest)) {
+                              print(
+                                'DEBUG: User is guest or unauthenticated, navigating to AuthScreen',
+                              );
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => const AuthScreen(),
@@ -184,6 +193,9 @@ class CartScreen extends StatelessWidget {
                                 ),
                               );
                             } else {
+                              print(
+                                'DEBUG: User is authenticated, navigating to CheckoutScreen',
+                              );
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => const CheckoutScreen(),

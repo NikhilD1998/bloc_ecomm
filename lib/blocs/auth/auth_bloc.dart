@@ -36,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final box = await Hive.openBox(_authBoxName);
       await box.put(_authKey, true);
       await box.put(_guestKey, false);
-      emit(const Authenticated(isGuest: false));
+      emit(Authenticated(isGuest: false));
     } else {
       emit(const Unauthenticated(error: 'Invalid credentials'));
     }
@@ -51,7 +51,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final box = await Hive.openBox(_authBoxName);
     await box.put(_authKey, true);
     await box.put(_guestKey, true);
-    emit(const Authenticated(isGuest: true));
+    emit(Authenticated(isGuest: true));
   }
 
   Future<void> _onLogoutRequested(

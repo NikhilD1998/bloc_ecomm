@@ -4,10 +4,13 @@ import 'package:bloc_ecomm/widgets/checkout_screen/review_cart.dart';
 import 'package:bloc_ecomm/widgets/checkout_screen/shipping_step.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import '../../blocs/cart/cart_bloc.dart';
 import '../../blocs/cart/cart_event.dart';
 import '../../blocs/cart/cart_state.dart';
+import '../../models/order_model.dart';
 import '../../theme/app_colors.dart';
+import '../../theme/app_text_styles.dart';
 import '../../widgets/common/primary_button.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -59,26 +62,35 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }
   }
 
-  Future<void> _saveOrderToHive() async {
-    // You should have an Order model and Hive box set up for this.
-    // Example:
-    // final orderBox = await Hive.openBox('orders');
-    // orderBox.add({
-    //   'id': _generateOrderId(),
-    //   'name': _name,
-    //   'address': _address,
-    //   'city': _city,
-    //   'zip': _zip,
-    //   'items': ...,
-    //   'total': ...,
-    //   'date': DateTime.now(),
-    // });
+  Future<void> _saveOrderToHive(CartLoaded state) async {
+    final orderBox = await Hive.openBox<OrderModel>('orders');
+    final order = OrderModel(
+      id: _generateOrderId(),
+      name: _name,
+      address: _address,
+      city: _city,
+      zip: _zip,
+      items: state.items
+          .map(
+            (item) => OrderItem(
+              id: item.id,
+              title: item.title,
+              price: item.price,
+              quantity: item.quantity,
+              imageUrl: item.imageUrl,
+            ),
+          )
+          .toList(),
+      total: state.total,
+      date: DateTime.now(),
+    );
+    await orderBox.add(order);
   }
 
   void _onNextPressed(CartLoaded state) async {
     if (_currentStep == 1) {
       // Place Order
-      await _saveOrderToHive();
+      await _saveOrderToHive(state);
       context.read<CartBloc>().add(ClearCart());
       setState(() {
         _currentStep++;
