@@ -1,4 +1,3 @@
-import 'package:bloc_ecomm/widgets/common/app_button.dart';
 import 'package:bloc_ecomm/widgets/common/outlined_button_custom.dart';
 import 'package:bloc_ecomm/widgets/common/primary_button.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  String? _loadingAction; // "login" or "guest" or null
+  String? _loadingAction;
 
   @override
   void dispose() {

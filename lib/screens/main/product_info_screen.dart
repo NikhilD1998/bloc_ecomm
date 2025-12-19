@@ -3,6 +3,7 @@ import '../../helpers/dummy_data.dart';
 import '../../models/product_model.dart';
 import '../../theme/app_text_styles.dart';
 import '../../theme/app_colors.dart';
+import '../../widgets/common/primary_button.dart'; // <-- Import PrimaryButton
 
 class ProductInfoScreen extends StatelessWidget {
   final String productId;
@@ -71,18 +72,14 @@ class ProductInfoScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
+            PrimaryButton(
+              label: 'Add to Cart',
               onPressed: product.inStock
                   ? () {
                       // TODO: Add to cart via CartBloc
                     }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.activatedButtonContainer,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 48),
-              ),
-              child: const Text('Add to Cart'),
+                  : () {},
+              enabled: product.inStock,
             ),
           ],
         ),

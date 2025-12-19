@@ -1,4 +1,3 @@
-import 'package:bloc_ecomm/theme/app_colors.dart' show AppColors;
 import 'package:flutter/material.dart';
 
 class PrimaryButton extends StatelessWidget {
