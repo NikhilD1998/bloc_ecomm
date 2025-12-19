@@ -47,19 +47,5 @@ bloc_ecomm is a sample e-commerce mobile application built with Flutter and BLoC
 
 ## Requirements
 
-- **Flutter:** 3.19 or higher
-- **Dart:** 3.8.1 or higher
-
-## How to Test
-
-If you add or modify tests, run:
-
-```
-flutter test
-```
-
-Widget and unit tests can be found in the `test/` directory.
-
----
-
-For more information, see the [Flutter documentation](https://docs.flutter.dev/).
+- **Flutter:** 3.32.8 (channel stable)
+- **Dart:** 3.8.1
