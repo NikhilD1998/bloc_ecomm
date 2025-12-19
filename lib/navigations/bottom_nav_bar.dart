@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -8,13 +9,16 @@ class BottomNavBar extends StatefulWidget {
   State<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _BottomNavBarState extends State<BottomNavBar>
+    with TickerProviderStateMixin {
   int _selectedIndex = 0;
 
   void _onNavTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (_selectedIndex != index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   Widget _getBodyForIndex(int index) {
@@ -33,30 +37,67 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _getBodyForIndex(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onNavTap,
-        backgroundColor: AppColors.screenBackground,
-        selectedItemColor: AppColors.activatedButtonContainer,
-        unselectedItemColor: AppColors.unselectedFieldsFont,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: _getBodyForIndex(_selectedIndex),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: AppColors.screenBackground,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 12,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          child: BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            onTap: _onNavTap,
+            backgroundColor: AppColors.screenBackground,
+            selectedItemColor: AppColors.activatedButtonContainer,
+            unselectedItemColor: AppColors.unselectedFieldsFont,
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            elevation: 0,
+            selectedLabelStyle: AppTextStyles.bodyText14.copyWith(
+              fontWeight: FontWeight.w700,
+              color: AppColors.activatedButtonContainer,
+            ),
+            unselectedLabelStyle: AppTextStyles.bodyText14.copyWith(
+              fontWeight: FontWeight.w400,
+              color: AppColors.unselectedFieldsFont,
+            ),
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
+                  size: _selectedIndex == 0 ? 28 : 24,
+                ),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  _selectedIndex == 1
+                      ? Icons.shopping_cart
+                      : Icons.shopping_cart_outlined,
+                  size: _selectedIndex == 1 ? 28 : 24,
+                ),
+                label: 'Cart',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  _selectedIndex == 2 ? Icons.person : Icons.person_outline,
+                  size: _selectedIndex == 2 ? 28 : 24,
+                ),
+                label: 'Profile',
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_outlined),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
-          ),
-        ],
+        ),
       ),
     );
   }
